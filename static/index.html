@@ -17,10 +17,9 @@
                 <li><a href="#">Sign Out</a></li>
             </ul>
         </nav>
-        <h3 class="text-muted">Store</h3>
+        <h3 class="text-muted">Store - Items</h3>
     </div>
     <table class="table">
-        <caption>Table containing the store items</caption>
             <thead>
                 <tr>
                     <th>#</th>
@@ -44,10 +43,10 @@
                     </td>
                     <td style="white-space: nowrap">
                         <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
-                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                            <button type="submit" ng-disabled="rowform.$waiting" class="btn-link">
                                 <span class="glyphicon glyphicon glyphicon-ok"></span>
                             </button>
-                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn-link">
                                 <span class="glyphicon glyphicon glyphicon-remove"></span>
                             </button>
                         </form>
