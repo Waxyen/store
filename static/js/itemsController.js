@@ -7,15 +7,13 @@ app.run(function(editableOptions) {
 app.controller("ItemsCtrl", function($http, $scope) {
     var app = this;
     
-    $scope.user = {
-        name: 'awesome user'
-    }
-    
     $scope.refresh = function() {
         $http.get("/api/items").success(function (data) {
             app.items = data.objects;
         })
     }
+    
+    $scope.url = window.location.href;
     
     $scope.refresh();
     

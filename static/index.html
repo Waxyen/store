@@ -14,7 +14,7 @@
         <nav>
             <ul class="nav nav-pills pull-right">
                  <li class="active"><a href="/">Items overview</a></li>
-                <li><a href="#">Sign Out</a></li>
+                <li><a href="/signout">Sign Out</a></li>
             </ul>
         </nav>
         <h3 class="text-muted">Store - Items</h3>
@@ -42,7 +42,7 @@
                         </span>
                     </td>
                     <td style="white-space: nowrap">
-                        <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+                        <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline">
                             <button type="submit" ng-disabled="rowform.$waiting" class="btn-link">
                                 <span class="glyphicon glyphicon glyphicon-ok"></span>
                             </button>
