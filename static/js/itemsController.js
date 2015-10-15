@@ -24,20 +24,18 @@ app.controller("ItemsCtrl", ['$http', '$scope', function($http, $scope) {
     
     $scope.refresh();
     
-    $scope.add = function() {
-        if($scope.item){
-            if($scope.item.name && $scope.item.price){
-                $http.post("/api/items", {
-                    "name": $scope.item.name,
-                    "price": $scope.item.price,
-                    "user_id": $scope.userId
-                }).then(function (data) {
-                    $scope.item.name = null;
-                    $scope.item.price = null;
-                    $scope.items.push(data.data);
-                    $scope.totalItems++; 
-                })
-            }
+    $scope.add = function(item) {
+        if($scope.item.name && $scope.item.price){
+            $http.post("/api/items", {
+                "name": $scope.item.name,
+                "price": $scope.item.price,
+                "user_id": $scope.userId
+            }).success(function () {
+                $scope.item.name = null;
+                $scope.item.price = null;
+                $scope.currentPage = Math.ceil(($scope.totalItems +1) / 10);
+                $scope.refresh();
+            })
         }
     }
     
