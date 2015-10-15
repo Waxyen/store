@@ -7,10 +7,18 @@ app.run(function(editableOptions) {
 app.controller("ItemsCtrl", function($http, $scope) {
     var app = this;
     
+    app.page = 1;
+    
     $scope.refresh = function() {
-        $http.get("/api/items").success(function (data) {
+        $http.get("/api/items?page="+app.page).success(function (data) {
             app.items = data.objects;
+            app.pages = new Array(data.total_pages);
         })
+    }
+    
+    $scope.paginate = function (page) {
+        app.page = page;
+        $scope.refresh();
     }
     
     $scope.url = window.location.href;

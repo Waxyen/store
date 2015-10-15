@@ -65,7 +65,15 @@
                     </th>
                 </tr> 
             </tbody>
-    </table>          
+    </table>
+    
+    <div class="text-center">
+        <ul class="pagination">
+            <li ng-repeat="page in itemsCtrl.pages track by $index">
+                <a href="" ng-click="paginate($index + 1)">{{ $index + 1 }}</a>
+            </li>
+        </ul>
+    </div>
     <footer class="footer">
         <p>&copy; gerritruiter.nl 2015</p>
     </footer>
