@@ -1,27 +1,26 @@
-var app = angular.module("app", ["xeditable"]);
+var app = angular.module("app", ["xeditable", "ui.bootstrap"]);
 
-app.run(function(editableOptions) {
+app.run(['editableOptions', function(editableOptions) {
   editableOptions.theme = 'bs3';
-});
+}]);
 
-app.controller("ItemsCtrl", function($http, $scope) {
+app.controller("ItemsCtrl", ['$http', '$scope', function($http, $scope) {
     var app = this;
-    
-    app.page = 1;
+
+    $scope.currentPage = 1;
+    $scope.maxSize = 7;
+    $scope.url = window.location.href;
+   
+    $http.get("/getUserId").success(function (data) {
+        $scope.userId = data;
+    })
     
     $scope.refresh = function() {
-        $http.get("/api/items?page="+app.page).success(function (data) {
-            app.items = data.objects;
-            app.pages = new Array(data.total_pages);
+        $http.get("/api/items?page="+$scope.currentPage).success(function (data) {
+            $scope.items = data.objects;
+            $scope.totalItems = data.num_results;
         })
     }
-    
-    $scope.paginate = function (page) {
-        app.page = page;
-        $scope.refresh();
-    }
-    
-    $scope.url = window.location.href;
     
     $scope.refresh();
     
@@ -30,22 +29,24 @@ app.controller("ItemsCtrl", function($http, $scope) {
             if($scope.item.name && $scope.item.price){
                 $http.post("/api/items", {
                     "name": $scope.item.name,
-                    "price": $scope.item.price
-                }).success(function () {
+                    "price": $scope.item.price,
+                    "user_id": $scope.userId
+                }).then(function (data) {
                     $scope.item.name = null;
                     $scope.item.price = null;
-                    $scope.refresh();
+                    $scope.items.push(data.data);
+                    $scope.totalItems++; 
                 })
             }
         }
     }
     
     $scope.update = function(index) {
-        $http.put("/api/items/"+app.items[index].id, {
-            "name": app.items[index].name,
-            "price": app.items[index].price
-        }).success(function () {
-            $scope.refresh();
+        $http.put("/api/items/"+$scope.items[index].id, {
+            "name": $scope.items[index].name,
+            "price": $scope.items[index].price
+        }).then(function (data) {
+            $scope.items[index] = data.data;
         })
     }
     
@@ -56,4 +57,4 @@ app.controller("ItemsCtrl", function($http, $scope) {
             })
         }
     }
-})
+}])

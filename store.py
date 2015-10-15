@@ -50,6 +50,12 @@ def validateLogin():
         return redirect('/signin?error_something_unknown_went_wrong')
 
 
+@app.route('/getUserId')
+def getUserId():
+    if session.get('user_id'):
+        return str(session.get('user_id'))
+
+
 @app.route('/signout')
 def logout():
     session.pop('user_id',None)

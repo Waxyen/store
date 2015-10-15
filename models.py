@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, Float, Text
+from sqlalchemy import Column, Integer, Float, Text, ForeignKey
 from flask_restless import APIManager
+from sqlalchemy.orm import backref, relationship
 
 app = Flask(__name__, static_url_path='')
 
@@ -13,6 +14,7 @@ class Items(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(Text, unique=False)
     price = Column(Float, unique=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
 
 
 class Users(db.Model):
@@ -21,6 +23,7 @@ class Users(db.Model):
     password = Column(Text, unique=False)
     firstName = Column(Text, unique=False)
     lastName = Column(Text, unique=False)
+    items = relationship('Items', backref=backref('user'))
 
 
 api_manager = APIManager(app, flask_sqlalchemy_db=db)

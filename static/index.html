@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in itemsCtrl.items">
+                <tr ng-repeat="item in items">
                     <td>{{ $index + 1 }}</td>
                     <td>
                         <span editable-text="item.name" onaftersave="update($index)" e-name="name" e-form="rowform" e-required>
@@ -66,20 +66,17 @@
                 </tr> 
             </tbody>
     </table>
-    
     <div class="text-center">
-        <ul class="pagination">
-            <li ng-repeat="page in itemsCtrl.pages track by $index">
-                <a href="" ng-click="paginate($index + 1)">{{ $index + 1 }}</a>
-            </li>
-        </ul>
+        <uib-pagination total-items="totalItems" ng-change="refresh()" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></uib-pagination>
     </div>
-    <footer class="footer">
-        <p>&copy; gerritruiter.nl 2015</p>
-    </footer>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-    <script src="js/itemsController.js"></script>
-</div>
+    <div>
+        <footer class="footer">
+            <p>&copy; gerritruiter.nl 2015</p>
+        </footer>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="js/itemsController.js"></script>
+    </div>
 </body>
 </html>
