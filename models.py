@@ -7,6 +7,8 @@ from sqlalchemy.orm import backref, relationship
 app = Flask(__name__, static_url_path='')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/store'
+app.config['SECRET_KEY'] = 'as34k32223wsSS0rD34qCe3f034tq3oj'
+app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
 

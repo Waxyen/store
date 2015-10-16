@@ -1,14 +1,7 @@
 import hashlib
-from flaskext.mysql import MySQL
 from models import *
-from flask import request, redirect, session
+from flask import request, redirect, session, flash
 
-mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-app.config['MYSQL_DATABASE_DB'] = 'store'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
 
 @app.route('/')
 def index():
@@ -27,43 +20,37 @@ def signin():
 
 
 @app.route('/validateLogin', methods=['POST'])
-def validateLogin():
+def validate_login():
     try:
-        email = request.form['email']
-        password = request.form['password']
-
         salt = "812d47da9c414432360e3307495020a1wWa2"
-        hashed_password = hashlib.sha512(password + salt).hexdigest()
+        email = request.form['email']
+        hashed_password = hashlib.sha512(request.form['password'] + salt).hexdigest()
 
-        cursor = mysql.connect().cursor()
-        cursor.execute("SELECT * from users where email='" + email + "' and password='" + hashed_password + "'")
-        data = cursor.fetchone()
-        if data is None:
-            cursor.close()
-            return redirect('/signin?error_wrong_email_or_password')
-        else:
-            cursor.close()
-            session['user_id'] = data[0]
-            return redirect('/')
+        user = Users.query.filter_by(email=email).first()
+
+        if user is None:
+            return redirect('/signin?no_user_by_that_email')
+
+        if hashed_password != user.password:
+            return redirect('/signin?wrong_password')
+
+        session['user_id'] = user.id
+        return redirect('/')
 
     except Exception as e:
         return redirect('/signin?error_something_unknown_went_wrong')
 
 
 @app.route('/getUserId')
-def getUserId():
+def get_user_id():
     if session.get('user_id'):
         return str(session.get('user_id'))
 
 
-@app.route('/signout')
+@app.route('/logout')
 def logout():
     session.pop('user_id',None)
     return redirect('/signin')
 
-
-app.debug = True
-
 if __name__ == '__main__':
-    app.secret_key = 'A0Zr45j/3yX R~DDH!skN]LZX/,?RT'
     app.run()
