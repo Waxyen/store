@@ -1,22 +1,21 @@
 import hashlib
 from models import *
-from flask import request, redirect, session, flash
+from flask import request, redirect, flash
+from flask_login import login_user, login_required, logout_user
+
+
+login_manager.login_view = 'signin'
 
 
 @app.route('/')
+@login_required
 def index():
-    if session.get('user_id'):
-        return app.send_static_file('index.html')
-    else:
-        return redirect('/signin?not_authorized')
+    return app.send_static_file('index.html')
 
 
 @app.route('/signin')
 def signin():
-    if session.get('user_id'):
-        return redirect('/')
-    else:
-        return app.send_static_file('signin.html')
+    return app.send_static_file('signin.html')
 
 
 @app.route('/validateLogin', methods=['POST'])
@@ -34,7 +33,8 @@ def validate_login():
         if hashed_password != user.password:
             return redirect('/signin?wrong_password')
 
-        session['user_id'] = user.id
+        login_user(user)
+        flash('Successfully logged in')
         return redirect('/')
 
     except Exception as e:
@@ -42,14 +42,15 @@ def validate_login():
 
 
 @app.route('/getUserId')
+@login_required
 def get_user_id():
-    if session.get('user_id'):
-        return str(session.get('user_id'))
+    return str(session.get('user_id'))
 
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.pop('user_id',None)
+    logout_user()
     return redirect('/signin')
 
 if __name__ == '__main__':
