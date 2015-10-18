@@ -6,19 +6,25 @@
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
     <link href="css/extra-style.css" rel="stylesheet">
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="js/itemsController.js"></script>
 </head>
-
 <body ng-app="app" ng-controller="ItemsCtrl as itemsCtrl">
 <div class="container-fluid">
     <div class="header">
         <nav>
             <ul class="nav nav-pills pull-right">
                  <li class="active"><a href="/">Items overview</a></li>
-                <li><a href="/logout">Sign Out</a></li>
+                <li><a href="/logout">Log Out</a></li>
             </ul>
         </nav>
         <h3 class="text-muted">Store - Items</h3>
     </div>
+
+    {% include 'elements/flash_element.html' %}
+
     <table class="table">
             <thead>
                 <tr>
@@ -30,7 +36,9 @@
             </thead>
             <tbody>
                 <tr ng-repeat="item in items">
+                    {% raw %}
                     <td>{{ ((currentPage * 10) -10 ) + $index + 1 }}</td>
+
                     <td>
                         <span editable-text="item.name" onaftersave="update($index)" e-name="name" e-form="rowform" e-required>
                             {{ item.name || 'empty' }}
@@ -38,9 +46,10 @@
                     </td>
                     <td>
                          <span editable-number="item.price" e-name="name" e-form="rowform" e-required>
-                            {{ item.price || 'empty' }}
+                            {{ item.price || 'empty'  }}
                         </span>
                     </td>
+                    {% endraw %}
                     <td style="white-space: nowrap">
                         <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline">
                             <button type="submit" ng-disabled="rowform.$waiting" class="btn-link">
@@ -69,14 +78,9 @@
     <div class="text-center">
         <uib-pagination total-items="totalItems" ng-change="refresh()" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></uib-pagination>
     </div>
-    <div>
-        <footer class="footer">
-            <p>&copy; gerritruiter.nl 2015</p>
-        </footer>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="js/itemsController.js"></script>
-    </div>
+
+    {% include 'elements/footer_element.html' %}
+
+</div>
 </body>
 </html>
