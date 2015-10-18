@@ -1,6 +1,7 @@
 import hashlib
+import logging
 from flask import Flask, request, redirect, flash, render_template
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user, AnonymousUserMixin
 from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, Float, Text, ForeignKey
@@ -47,15 +48,16 @@ api_manager = APIManager(app, flask_sqlalchemy_db=db)
 api_manager.create_api(Users, methods=['GET', 'POST', 'DELETE', 'PUT'],
                        include_columns=['id', 'email', 'firstName', 'lastName', 'items'])
 api_manager.create_api(Items, methods=['GET', 'POST', 'DELETE', 'PUT'])
+
 login_manager.login_view = 'login'
+login_manager.login_message_category = 'danger'
 
 
 @app.before_request
 def before_request():
     if '/api/' in str(request.url_rule):
-        try:
-            current_user.id
-        except Exception as e:
+        if not current_user.is_authenticated:
+            flash(u'Please log in to access that page', 'danger')
             return redirect('/login')
 
 
@@ -65,9 +67,14 @@ def load_user(user_id):
 
 
 @app.route('/')
-@login_required
 def index():
-    return render_template('index.html')
+    return redirect('/login')
+
+
+@app.route('/items')
+@login_required
+def items():
+    return render_template('items.html')
 
 
 @app.route('/login')
@@ -87,8 +94,8 @@ def validate_login():
             return redirect('/login')
 
         login_user(user)
-        flash(u'Successfully logged in', 'success')
-        return redirect('/')
+        flash(u'You are now logged in', 'success')
+        return redirect('/items')
 
     except Exception as e:
         flash(u'Something went terribly wrong', 'danger')
@@ -105,7 +112,7 @@ def get_user_id():
 @login_required
 def logout():
     logout_user()
-    flash(u'Successfully logged out', 'success')
+    flash(u'You are now logged out', 'success')
     return redirect('/login')
 
 
