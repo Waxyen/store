@@ -1,6 +1,6 @@
 import hashlib
 from flask import Flask, request, redirect, flash, render_template
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user, AnonymousUserMixin
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restless import APIManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, Float, Text, ForeignKey
